@@ -6,7 +6,7 @@ public sealed record CreateProductCommand(
     string Description,
     string ImageFile,
     decimal Price) : ICommand<CreateProductResult>;
-public sealed record CreateProductResult(Guid id);
+public sealed record CreateProductResult(Guid Id);
 
 
 internal sealed class CreateProductCommandHandler(IDocumentSession session) : ICommandHandler<CreateProductCommand, CreateProductResult>
