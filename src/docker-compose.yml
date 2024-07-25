@@ -1,5 +1,6 @@
-
+﻿
 services:
+#Catalog
   catalog-db:
     image: postgres
 
@@ -9,7 +10,12 @@ services:
       context: .
       dockerfile: Services/Catalog/Catalog.API/Dockerfile
 
+#Basket
+  basket-db:
+    image: postgres
+
 volumes:
   postgres_catalog:
+  postgres_basket:
 
 
