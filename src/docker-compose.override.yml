@@ -26,6 +26,15 @@ services:
     volumes:
       - postgres_basket:/var/lib/postgresql/data/
 
+  order-db:
+    container_name: order-db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Tr1c0lor
+    restart: always
+    ports:
+      - "1433:1433"
+
 #Cache
   distributedcache:
     container_name: distributedcache

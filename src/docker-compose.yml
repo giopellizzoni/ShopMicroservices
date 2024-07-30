@@ -10,6 +10,9 @@ services:
       context: .
       dockerfile: Services/Catalog/Catalog.API/Dockerfile
 
+  order-db:
+    image: mcr.microsoft.com/mssql/server
+
 #Cache
   distributedcache:
     image: redis
