@@ -12,8 +12,8 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
                 orderId => orderId.Value,
                 dbId => OrderId.Of(dbId)
             );
-
-        builder.HasOne<CustomerId>()
+        
+        builder.HasOne<Customer>()
             .WithMany()
             .HasForeignKey(o => o.CustomerId)
             .IsRequired();
