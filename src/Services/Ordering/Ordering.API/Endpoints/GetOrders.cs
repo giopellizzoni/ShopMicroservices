@@ -16,11 +16,11 @@ public class GetOrders : ICarterModule
                 var result = await sender.Send(query);
                 var response = result.Adapt<GetOrdersResponse>();
 
-                Results.Ok(response);
+                return Results.Ok(response);
 
             })
         .WithName("GetOrders")
-        .Produces(StatusCodes.Status200OK)
+        .Produces<GetOrdersResponse>()
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Get Orders")

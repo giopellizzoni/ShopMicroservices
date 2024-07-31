@@ -11,7 +11,7 @@ public class CreateOrder: ICarterModule
     {
         app.MapPost("/orders", async (CreateOrderRequest request, ISender sender) =>
         {
-            var command = request.Order.Adapt<CreateOrderCommand>();
+            var command = request.Adapt<CreateOrderCommand>();
 
             var result = await sender.Send(command);
 
@@ -20,7 +20,7 @@ public class CreateOrder: ICarterModule
             return Results.Created($"/orders/{response.Id}", response);
         })
         .WithName("CreateOrder")
-        .Produces(StatusCodes.Status201Created)
+        .Produces<CreateOrderResponse>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Create Order")
         .WithDescription("Create a new order");

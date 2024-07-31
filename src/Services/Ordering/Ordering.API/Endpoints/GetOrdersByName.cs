@@ -9,16 +9,16 @@ public class GetOrdersByName: ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/orders/{name}", async (
-            string Name,
+        app.MapGet("/orders/{orderName}", async (
+            string orderName,
             ISender sender) =>
         {
-            var result = await sender.Send(new GetOrdersByNameQuery(Name));
+            var result = await sender.Send(new GetOrdersByNameQuery(orderName));
             var response = result.Adapt<GetOrdersByNameResponse>();
             return Results.Ok(response);
         })
         .WithName("GetOrdersByName")
-        .Produces(StatusCodes.Status200OK)
+        .Produces<GetOrdersByNameResponse>()
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Get Orders By Name")

@@ -10,6 +10,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 
         builder.Property(c => c.Name).HasMaxLength(100);
 
+        builder.Property(c => c.Email).HasMaxLength(255);
         builder.HasIndex(c => c.Email).IsUnique();
     }
 }

@@ -11,7 +11,6 @@ public class GetOrdersQueryHandler(IApplicationDbContext context) : IQueryHandle
         var pageSize = query.Request.PageSize;
         var totalCount = await context.OrderItems.LongCountAsync(cancellationToken);
 
-
         var orders = await context.Orders
             .Include(o => o.OrderItems)
             .OrderBy(o => o.OrderName.Value)
@@ -19,7 +18,11 @@ public class GetOrdersQueryHandler(IApplicationDbContext context) : IQueryHandle
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        return new GetOrdersQueryResult(new PaginatedResult<OrderDto>(pageIndex, pageSize, totalCount,
-            orders.ToOrderDtoList()));
+        return new GetOrdersQueryResult(
+            new PaginatedResult<OrderDto>(
+                pageIndex,
+                pageSize,
+                totalCount,
+                orders.ToOrderDtoList()));
     }
 }

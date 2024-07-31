@@ -15,7 +15,7 @@ internal class GetOrdersByCustomerQueryHandler(IApplicationDbContext context) : 
             .Include(o => o.OrderItems)
             .AsNoTracking()
             .Where(o => o.CustomerId == CustomerId.Of(query.CustomerId))
-            .OrderBy(o => o.OrderName)
+            .OrderBy(o => o.OrderName.Value)
             .ToListAsync(cancellationToken);
 
         return new GetOrdersByCustomerResult(orders.ToOrderDtoList());

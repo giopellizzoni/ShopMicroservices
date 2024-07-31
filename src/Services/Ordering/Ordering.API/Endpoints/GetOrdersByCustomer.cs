@@ -10,7 +10,7 @@ public class GetOrdersByCustomer: ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/orders/{customerId}", async (
+        app.MapGet("/orders/customer/{customerId}", async (
                 Guid customerId,
                 ISender sender) =>
             {
@@ -19,7 +19,7 @@ public class GetOrdersByCustomer: ICarterModule
                 return Results.Ok(response);
             })
             .WithName("GetOrdersByCustomer")
-            .Produces(StatusCodes.Status200OK)
+            .Produces<GetOrdersByCustomerResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .WithSummary("Get Orders By Customer")
