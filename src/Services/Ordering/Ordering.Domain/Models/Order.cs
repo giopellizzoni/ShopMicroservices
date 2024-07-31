@@ -34,7 +34,7 @@ public class Order : Aggregate<OrderId>
         return order;
     }
 
-    public void Create(
+    public void Update(
         OrderName orderName,
         Address shippingAddress,
         Address billingAddress,
