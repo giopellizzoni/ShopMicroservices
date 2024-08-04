@@ -4,11 +4,12 @@ using Ordering.Infrastructure;
 using Ordering.Infrastructure.Data.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
 builder.Services
     .AddApplicationServices()
-    .AddInfrastructureServices(builder.Configuration)
-    .AddApiServices();
+    .AddInfrastructureServices(configuration)
+    .AddApiServices(configuration);
 
 var app = builder.Build();
 
