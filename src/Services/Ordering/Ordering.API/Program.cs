@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 builder.Services
-    .AddApplicationServices()
+    .AddApplicationServices(configuration)
     .AddInfrastructureServices(configuration)
     .AddApiServices(configuration);
 
