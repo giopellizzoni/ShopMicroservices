@@ -112,7 +112,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Database=Server=order-db;Database=OrderDb;User Id=sa;Password=Tr1c0lor;Encrypt=False;TrustServerCertificate=True
-      - MessageBroker__Host=amqp://localhost:5672
+      - MessageBroker__Host=amqp://ecommerce-mq:5672
       - MessageBroker__UserName=guest
       - MessageBroker__Password=guest
       - FeatureManagement__OrderFulfillment=true
