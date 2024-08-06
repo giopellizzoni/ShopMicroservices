@@ -5,20 +5,12 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <UserSecretsId>12620431-5fa8-4a3e-969a-04cce605e8c0</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Update="appsettings.Local.json">
-        <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-      </Content>
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Yarp.ReverseProxy" Version="2.1.0" />
     </ItemGroup>
 
 </Project>
