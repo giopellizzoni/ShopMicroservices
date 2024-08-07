@@ -9,6 +9,19 @@ builder.Services.AddRefitClient<ICatalogService>()
         var address = builder.Configuration["ApiSettings:GatewayAddress"] ?? "";
         c.BaseAddress = new Uri(address);
     });
+builder.Services.AddRefitClient<IBasketService>()
+    .ConfigureHttpClient(c =>
+    {
+        var address = builder.Configuration["ApiSettings:GatewayAddress"] ?? "";
+        c.BaseAddress = new Uri(address);
+    });
+
+builder.Services.AddRefitClient<IOrderingService>()
+    .ConfigureHttpClient(c =>
+    {
+        var address = builder.Configuration["ApiSettings:GatewayAddress"] ?? "";
+        c.BaseAddress = new Uri(address);
+    });
 
 var app = builder.Build();
 
