@@ -1,4 +1,11 @@
+﻿
+using Common.Logging;
+
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog(SeriLogger.Configure);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -22,6 +29,7 @@ builder.Services.AddRefitClient<IOrderingService>()
         var address = builder.Configuration["ApiSettings:GatewayAddress"] ?? "";
         c.BaseAddress = new Uri(address);
     });
+
 
 var app = builder.Build();
 

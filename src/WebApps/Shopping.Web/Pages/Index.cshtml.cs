@@ -17,7 +17,7 @@ public class IndexModel(ICatalogService catalogService, IBasketService basketSer
         logger.LogInformation("Add to cart button clicked");
         var productResponse = await catalogService.GetProductsById(productId);
 
-        var basket = await basketService.LoadUserBasket();
+         var basket = await basketService.LoadUserBasket();
 
         basket.Items.Add(new ShoppingCartItemModel
         {

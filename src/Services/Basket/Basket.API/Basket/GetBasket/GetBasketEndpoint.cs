@@ -20,6 +20,7 @@ public class GetBasketEndpoint : ICarterModule
                         .WithName("GetBasket")
                         .Produces(StatusCodes.Status200OK)
                         .ProducesProblem(StatusCodes.Status400BadRequest)
+                        .ProducesProblem(StatusCodes.Status404NotFound)
                         .WithSummary("Get Basket")
                         .WithDescription("Get Basket by Username");
 

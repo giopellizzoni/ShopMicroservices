@@ -58,7 +58,8 @@ public class CustomExceptionHandler(ILogger<CustomExceptionHandler> logger) : IE
                 context.Response.StatusCode = StatusCodes.Status400BadRequest),
             NotFoundException => (
                 exception.Message,
-                exception.GetType().Name, StatusCodes.Status404NotFound),
+                exception.GetType().Name,
+                context.Response.StatusCode = StatusCodes.Status404NotFound),
             _ => (
                 exception.Message,
                 exception.GetType().Name,
