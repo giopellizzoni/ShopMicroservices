@@ -1,10 +1,16 @@
-﻿using HealthChecks.UI.Client;
+﻿using Common.Logging;
+
+using HealthChecks.UI.Client;
 
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var assembly = typeof(Program).Assembly;
 // Adding Services to the container.
+
+builder.Host.UseSerilog(SeriLogger.Configure);
 
 builder.Services.AddMediatR(config =>
 {

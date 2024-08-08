@@ -9,26 +9,21 @@ builder.Host.UseSerilog(SeriLogger.Configure);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+var address = builder.Configuration["ApiSettings:GatewayAddress"]!;
+
+builder.Services.AddTransient<LoggingDelegatingHandler>();
 
 builder.Services.AddRefitClient<ICatalogService>()
-    .ConfigureHttpClient(c =>
-    {
-        var address = builder.Configuration["ApiSettings:GatewayAddress"] ?? "";
-        c.BaseAddress = new Uri(address);
-    });
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri(address))
+    .AddHttpMessageHandler<LoggingDelegatingHandler>();
+
 builder.Services.AddRefitClient<IBasketService>()
-    .ConfigureHttpClient(c =>
-    {
-        var address = builder.Configuration["ApiSettings:GatewayAddress"] ?? "";
-        c.BaseAddress = new Uri(address);
-    });
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri(address))
+    .AddHttpMessageHandler<LoggingDelegatingHandler>();
 
 builder.Services.AddRefitClient<IOrderingService>()
-    .ConfigureHttpClient(c =>
-    {
-        var address = builder.Configuration["ApiSettings:GatewayAddress"] ?? "";
-        c.BaseAddress = new Uri(address);
-    });
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri(address))
+    .AddHttpMessageHandler<LoggingDelegatingHandler>();
 
 
 var app = builder.Build();

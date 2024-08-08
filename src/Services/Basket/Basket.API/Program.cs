@@ -1,10 +1,15 @@
 ﻿
 using BuildingBlocks.Messaging.MassTransit;
 
+using Common.Logging;
+
 using Discount.Grpc.Protos;
+
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseSerilog(SeriLogger.Configure);
 var assembly = typeof(Program).Assembly;
 builder.Services.AddCarter();
 builder.Services.AddMediatR(config =>
