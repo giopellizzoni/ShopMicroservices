@@ -14,7 +14,7 @@ public static class SeriLogger
             configuration) =>
         {
             var elasticUri = context.Configuration.GetValue<string>("ElasticConfiguration:Uri")!;
-
+            Console.WriteLine($"Elastic URL: {elasticUri}");
             configuration
                 .Enrich.FromLogContext()
                 .Enrich.WithMachineName()

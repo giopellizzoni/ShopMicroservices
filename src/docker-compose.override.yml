@@ -59,6 +59,7 @@
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Database=Server=catalog-db;Port=5432;Database=CatalogDb;User Id=postgres;Password=postgres;Include Error Detail=true
+      - ElasticConfiguration__Uri=http://elasticsearch:9200
     depends_on:
       - catalog-db
     ports:
@@ -80,6 +81,7 @@
       - MessageBroker__Host=amqp://ecommerce-mq:5672
       - MessageBroker__UserName=guest
       - MessageBroker__Password=guest
+      - ElasticConfiguration__Uri=http://elasticsearch:9200
     depends_on:
       - basket-db
       - distributedcache
@@ -97,6 +99,7 @@
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Database=Data Source=discountdb
+      - ElasticConfiguration_Uri=http://elasticsearch:9200
     ports:
       - "6002:8080"
       - "6062:8081"
@@ -115,6 +118,7 @@
       - MessageBroker__UserName=guest
       - MessageBroker__Password=guest
       - FeatureManagement__OrderFulfillment=true
+      - ElasticConfiguration__Uri=http://elasticsearch:9200
     depends_on:
       - order-db
       - messagebroker
@@ -131,6 +135,7 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
+      - ElasticConfiguration__Uri=http://elasticsearch:9200
     depends_on:
       - catalog.api
       - ordering.api
@@ -148,6 +153,7 @@
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ApiSettings__GatewayAddress=http://yarpapigateway:8080
+      - ElasticConfiguration__Uri=http://elasticsearch:9200
     ports:
       - "6005:8080"
       - "6065:8081"

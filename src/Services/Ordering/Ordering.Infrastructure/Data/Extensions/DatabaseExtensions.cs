@@ -7,6 +7,7 @@ public static class DatabaseExtensions
 
     public static async Task InitialiseDatabaseAsync(this WebApplication app)
     {
+        //TODO: Consider to implement Polly To retry the migrations
         using var scope = app.Services.CreateScope();
 
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -20,7 +21,6 @@ public static class DatabaseExtensions
         await SeedCustomerAsync(context);
         await SeedProductAsync(context);
         await SeedOrderAndItemsAsync(context);
-
     }
 
     private static async Task SeedCustomerAsync(ApplicationDbContext context)
