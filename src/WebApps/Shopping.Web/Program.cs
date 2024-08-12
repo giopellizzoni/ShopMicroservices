@@ -1,5 +1,10 @@
 ﻿using Common.Logging;
 
+using HealthChecks.UI.Client;
+
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+
 using Polly;
 using Polly.Extensions.Http;
 
@@ -33,6 +38,9 @@ builder.Services.AddRefitClient<IOrderingService>()
     .AddPolicyHandler(GetRetryPolicy())
     .AddPolicyHandler(GetCircuitBreakerPolicy());
 
+builder.Services.AddHealthChecks()
+    .AddUrlGroup(new Uri(address), "Yarp Api Gateway", HealthStatus.Degraded);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -43,6 +51,11 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.MapHealthChecks("/hc", new HealthCheckOptions
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
