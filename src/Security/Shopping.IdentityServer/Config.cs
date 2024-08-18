@@ -1,4 +1,5 @@
-﻿using Duende.IdentityServer.Models;
+﻿using Duende.IdentityServer;
+using Duende.IdentityServer.Models;
 
 namespace Shopping.IdentityServer;
 
@@ -9,13 +10,15 @@ public static class Config
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
+            new IdentityResources.Address(),
+            new IdentityResources.Email(),
+            new IdentityResource("roles", "Your role(s)", new List<string> {"role"})
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
         new ApiScope[]
         {
-            new ApiScope("scope1"),
-            new ApiScope("scope2"),
+            new ApiScope("shoppingAPI", "Shopping.API")
         };
 
     public static IEnumerable<Client> Clients =>
@@ -48,5 +51,22 @@ public static class Config
                 AllowOfflineAccess = true,
                 AllowedScopes = { "openid", "profile", "scope2" }
             },
+            new Client
+            {
+                ClientId = "ShoppingMSAPI",
+                ClientSecrets = [new Secret("840C7CDA-1E6F-42E7-A29C-3D12FE965A6F".Sha256())],
+                AllowedGrantTypes = GrantTypes.Hybrid,
+                RedirectUris = { "https://localhost:5010/signin-oidc" },
+                FrontChannelLogoutUri = "https://localhost:5010/signout-oidc",
+                PostLogoutRedirectUris = { "https://localhost:5010/signout-callback-oidc" },
+                AllowedScopes = [
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.Address,
+                    IdentityServerConstants.StandardScopes.Email,
+                    "movieAPI",
+                    "roles"
+                ]
+            }
         };
 }
