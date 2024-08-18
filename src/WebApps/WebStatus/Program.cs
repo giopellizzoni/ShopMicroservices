@@ -1,4 +1,6 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.UseWebRoot("wwwroot");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

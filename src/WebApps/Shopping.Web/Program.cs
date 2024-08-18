@@ -39,7 +39,7 @@ builder.Services.AddRefitClient<IOrderingService>()
     .AddPolicyHandler(GetCircuitBreakerPolicy());
 
 builder.Services.AddHealthChecks()
-    .AddUrlGroup(new Uri(address), "Yarp Api Gateway", HealthStatus.Degraded);
+    .AddUrlGroup(new Uri($"{address}/health"), "Yarp Api Gateway", HealthStatus.Degraded);
 
 var app = builder.Build();
 
@@ -51,7 +51,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.MapHealthChecks("/hc", new HealthCheckOptions
+app.MapHealthChecks("/health", new HealthCheckOptions
 {
     Predicate = _ => true,
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
