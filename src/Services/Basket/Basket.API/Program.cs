@@ -1,10 +1,8 @@
-﻿
-using BuildingBlocks.Messaging.MassTransit;
-
+﻿using BuildingBlocks.Messaging.MassTransit;
 using Common.Logging;
-
 using Discount.Grpc.Protos;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +17,23 @@ builder.Services.AddMediatR(config =>
     config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer("Bearer", opts =>
+    {
+        opts.Authority = "https://localhost:5010";
+        opts.RequireHttpsMetadata = false;
+        opts.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false
+        };
+    });
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("BasketPolicy", policy => policy.RequireClaim("client_id", "shoppingAPI"));
 
 builder.Services.AddMarten(opt =>
 {
@@ -55,6 +70,8 @@ builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 var app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapCarter();
 app.UseExceptionHandler(_ => { });

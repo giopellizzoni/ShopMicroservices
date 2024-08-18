@@ -17,6 +17,7 @@ public class CheckoutBasketEndpoint : ICarterModule
 
             return Results.Ok(response);
         })
+        .RequireAuthorization("BasketPolicy")
         .WithName("CheckoutBasket")
         .Produces<CheckoutBasketResponse>()
         .ProducesProblem(StatusCodes.Status400BadRequest)
