@@ -47,6 +47,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Logging", "BuildingB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStatus", "WebApps\WebStatus\WebStatus.csproj", "{C25BAB7A-5E6C-4A9A-BAF4-940390E6B93F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{86304A7D-AE5C-48AD-AB2A-7A0262B6C730}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shopping.IdentityServer", "Security\Shopping.IdentityServer\Shopping.IdentityServer.csproj", "{17389371-9B28-441E-B271-37D25A4A7AD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +113,10 @@ Global
 		{C25BAB7A-5E6C-4A9A-BAF4-940390E6B93F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C25BAB7A-5E6C-4A9A-BAF4-940390E6B93F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C25BAB7A-5E6C-4A9A-BAF4-940390E6B93F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17389371-9B28-441E-B271-37D25A4A7AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17389371-9B28-441E-B271-37D25A4A7AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17389371-9B28-441E-B271-37D25A4A7AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17389371-9B28-441E-B271-37D25A4A7AD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,6 +139,7 @@ Global
 		{B67310D7-A544-4DC0-8C5A-B2BC9D35B4C4} = {D12EE287-4DEA-4725-B484-FDE1AE2A45F3}
 		{864DC455-38B6-49D6-B640-C9F0CA2F7B64} = {DC03986E-6209-424C-8B99-4484FBFFE521}
 		{C25BAB7A-5E6C-4A9A-BAF4-940390E6B93F} = {D12EE287-4DEA-4725-B484-FDE1AE2A45F3}
+		{17389371-9B28-441E-B271-37D25A4A7AD8} = {86304A7D-AE5C-48AD-AB2A-7A0262B6C730}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E83C6E1A-4B2E-4DD7-B096-90C47A4E609E}

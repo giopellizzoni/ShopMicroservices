@@ -50,31 +50,32 @@
     ports:
       - "5672:5672"
       - "15672:15672"
-
-  #APIs
+    
+    #APIs
+      
   catalog.api:
     container_name: Catalog.API
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
       - ConnectionStrings__Database=Server=catalog-db;Port=5432;Database=CatalogDb;User Id=postgres;Password=postgres;Include Error Detail=true
       - ElasticConfiguration__Uri=http://elasticsearch:9200
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     depends_on:
       - catalog-db
     ports:
-      - "6000:8080"
-      - "6060:8081"
+      - "6000:8080"  # HTTP
+      - "6060:8081"  # HTTPS
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${USER_SECRETS}:/home/app/.microsoft/usersecrets:ro
+      - ${ASP_NET}:/home/app/.aspnet/https:ro
 
   basket.api:
     container_name: Basket.API
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
       - ConnectionStrings__Database=Server=basket-db;Port=5432;Database=BasketDb;User Id=postgres;Password=postgres;Include Error Detail=true
       - ConnectionStrings__Redis=distributedcache:6379
       - GrpcSettings__DiscountUrl=https://discount.grpc:8081
@@ -82,86 +83,95 @@
       - MessageBroker__UserName=guest
       - MessageBroker__Password=guest
       - ElasticConfiguration__Uri=http://elasticsearch:9200
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     depends_on:
       - basket-db
       - distributedcache
       - discount.grpc
     ports:
-      - "6001:8080"
-      - "6061:8081"
+      - "6001:8080"  # HTTP
+      - "6061:8081"  # HTTPS
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${USER_SECRETS}:/home/app/.microsoft/usersecrets:ro
+      - ${ASP_NET}:/home/app/.aspnet/https:ro
 
   discount.grpc:
+    container_name: Discount.Grpc
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
       - ConnectionStrings__Database=Data Source=discountdb
       - HealthCheck__Address=https://localhost:6062
       - ElasticConfiguration__Uri=http://elasticsearch:9200
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     ports:
-      - "6002:8080"
-      - "6062:8081"
+      - "6002:8080"  # HTTP
+      - "6062:8081"  # HTTPS
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${USER_SECRETS}:/home/app/.microsoft/usersecrets:ro
+      - ${ASP_NET}:/home/app/.aspnet/https:ro
 
   ordering.api:
     container_name: Ordering.API
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
       - ConnectionStrings__Database=Server=order-db;Database=OrderDb;User Id=sa;Password=Tr1c0lor;Encrypt=False;TrustServerCertificate=True
       - MessageBroker__Host=amqp://ecommerce-mq:5672
       - MessageBroker__UserName=guest
       - MessageBroker__Password=guest
       - FeatureManagement__OrderFulfillment=true
       - ElasticConfiguration__Uri=http://elasticsearch:9200
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     depends_on:
       - order-db
       - messagebroker
     ports:
-      - "6003:8080"
-      - "6063:8081"
+      - "6003:8080"  # HTTP
+      - "6063:8081"  # HTTPS
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${USER_SECRETS}:/home/app/.microsoft/usersecrets:ro
+      - ${ASP_NET}:/home/app/.aspnet/https:ro
 
   yarpapigateway:
     container_name: ApiGateway
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
       - ElasticConfiguration__Uri=http://elasticsearch:9200
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     depends_on:
       - catalog.api
       - ordering.api
       - basket.api
     ports:
-      - "6004:8080"
-      - "6064:8081"
+      - "6004:8080"  # HTTP
+      - "6064:8081"  # HTTPS
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${USER_SECRETS}:/home/app/.microsoft/usersecrets:ro
+      - ${ASP_NET}:/home/app/.aspnet/https:ro
 
   shopping.web:
+    container_name: Shopping.Web
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
       - ApiSettings__GatewayAddress=http://yarpapigateway:8080
       - ElasticConfiguration__Uri=http://elasticsearch:9200
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     ports:
-      - "6005:8080"
-      - "6065:8081"
+      - "6005:8080"  # HTTP
+      - "6065:8081"  # HTTPS
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-
+      - ${USER_SECRETS}:/home/app/.microsoft/usersecrets:ro
+      - ${ASP_NET}:/home/app/.aspnet/https:ro
+  
+  
   pgadmin:
     container_name: pgadmin
     environment:
