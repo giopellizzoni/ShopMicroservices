@@ -61,6 +61,7 @@
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Database=Server=catalog-db;Port=5432;Database=CatalogDb;User Id=postgres;Password=postgres;Include Error Detail=true
       - ElasticConfiguration__Uri=http://elasticsearch:9200
+      - IdentityServer__Authority=https://shopping.identityserver:8081
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     depends_on:
@@ -85,6 +86,7 @@
       - MessageBroker__UserName=guest
       - MessageBroker__Password=guest
       - ElasticConfiguration__Uri=http://elasticsearch:9200
+      - IdentityServer__Authority=https://shopping.identityserver:8081
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     depends_on:
@@ -107,6 +109,7 @@
       - ConnectionStrings__Database=Data Source=discountdb
       - HealthCheck__Address=https://localhost:6062
       - ElasticConfiguration__Uri=http://elasticsearch:9200
+      - IdentityServer__Authority=https://shopping.identityserver:8081
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     ports:
@@ -128,6 +131,7 @@
       - MessageBroker__Password=guest
       - FeatureManagement__OrderFulfillment=true
       - ElasticConfiguration__Uri=http://elasticsearch:9200
+      - IdentityServer__Authority=https://shopping.identityserver:8081
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     depends_on:
@@ -146,6 +150,7 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
+      - IdentityServer__Authority=https://shopping.identityserver:8081
       - ElasticConfiguration__Uri=http://elasticsearch:9200
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
@@ -166,6 +171,7 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
+      - IdentityServer__Authority=https://shopping.identityserver:8081
       - ApiSettings__GatewayAddress=http://yarpapigateway:8080
       - ElasticConfiguration__Uri=http://elasticsearch:9200
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
@@ -239,3 +245,21 @@
     ports:
       - "6007:8080"
       #- "6067:8080"
+
+  shopping.identityserver:
+    container_name: "IdentityServer"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ElasticConfiguration__Uri=http://elasticsearch:9200
+      - ConnectionStrings__IdentityServerDb=Server=order-db;Database=IdentityServer;User Id=sa;Password=Tr1c0lor;Encrypt=False;TrustServerCertificate=True
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
+    ports:
+      - "6010:8080"  # HTTP
+      - "6070:8081"  # HTTPS
+    volumes:
+      - ${USER_SECRETS}:/home/app/.microsoft/usersecrets:ro
+      - ${ASP_NET}:/home/app/.aspnet/https:ro
+

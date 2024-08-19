@@ -51,6 +51,14 @@ services:
       context: .
       dockerfile: WebApps/Shopping.Web/Dockerfile
 
+#SECURITY
+  shopping.identityserver:
+    image: shopping.identityserver
+    build:
+      context: .
+      dockerfile: Security/Shopping.IdentityServer/Dockerfile
+
+#OBSERVABILITY
   pgadmin:
     image: dpage/pgadmin4
 
@@ -76,4 +84,3 @@ volumes:
   portainer_data:
   elasticsearch_data:
     driver: local
-

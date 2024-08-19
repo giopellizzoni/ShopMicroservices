@@ -16,6 +16,8 @@ using Polly.Extensions.Http;
 
 using Serilog;
 
+using Shopping.Web.Handlers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog(SeriLogger.Configure);
@@ -29,18 +31,21 @@ builder.Services.AddTransient<LoggingDelegatingHandler>();
 builder.Services.AddRefitClient<ICatalogService>()
     .ConfigureHttpClient(c => c.BaseAddress = new Uri(address))
     .AddHttpMessageHandler<LoggingDelegatingHandler>()
+    .AddHttpMessageHandler<HeaderTokenHandler>()
     .AddPolicyHandler(GetRetryPolicy())
     .AddPolicyHandler(GetCircuitBreakerPolicy());
 
 builder.Services.AddRefitClient<IBasketService>()
     .ConfigureHttpClient(c => c.BaseAddress = new Uri(address))
     .AddHttpMessageHandler<LoggingDelegatingHandler>()
+    .AddHttpMessageHandler<HeaderTokenHandler>()
     .AddPolicyHandler(GetRetryPolicy())
     .AddPolicyHandler(GetCircuitBreakerPolicy());
 
 builder.Services.AddRefitClient<IOrderingService>()
     .ConfigureHttpClient(c => c.BaseAddress = new Uri(address))
     .AddHttpMessageHandler<LoggingDelegatingHandler>()
+    .AddHttpMessageHandler<HeaderTokenHandler>()
     .AddPolicyHandler(GetRetryPolicy())
     .AddPolicyHandler(GetCircuitBreakerPolicy());
 
@@ -59,7 +64,7 @@ builder.Services.AddAuthentication(options =>
         options.Authority = authority;
         options.ClientId = "shopping-ms-api";
         options.ClientSecret = "840C7CDA-1E6F-42E7-A29C-3D12FE965A6F";
-        options.ResponseType = "code id_token";
+        options.ResponseType = "client_credentials";
 
         options.Scope.Add("address");
         options.Scope.Add("email");
@@ -76,9 +81,13 @@ builder.Services.AddAuthentication(options =>
             RoleClaimType = JwtClaimTypes.Role
         };
     });
+builder.Services.AddTransient<HeaderTokenHandler>();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -97,8 +106,6 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.MapRazorPages();
 
