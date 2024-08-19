@@ -1,9 +1,8 @@
 ﻿namespace Shopping.Web.Services;
 
-[Headers("Authorization: Bearer")]
 public interface ICatalogService
 {
-    
+
     [Get("/catalog-service/products?pageNumber={pageNumber}&pageSize={pageSize}")]
     Task<GetProductsResponse> GetProducts(
         int? pageNumber = 1,

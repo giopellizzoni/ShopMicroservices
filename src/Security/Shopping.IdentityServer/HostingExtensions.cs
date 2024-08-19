@@ -1,10 +1,13 @@
 ﻿using Duende.IdentityServer;
+
 using Shopping.IdentityServer;
 using Shopping.IdentityServer.Pages.Admin.ApiScopes;
 using Shopping.IdentityServer.Pages.Admin.Clients;
 using Shopping.IdentityServer.Pages.Admin.IdentityScopes;
+
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+
 using Serilog;
 
 namespace Shopping.IdentityServer;
@@ -46,6 +49,21 @@ internal static class HostingExtensions
                     b.UseSqlServer(connectionString,
                         dbOpts => dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName));
             });
+
+        {
+            builder.Services.AddAuthorization(options =>
+                options.AddPolicy("admin",
+                    policy => policy.RequireClaim("sub", "1"))
+            );
+
+            builder.Services.Configure<RazorPagesOptions>(options =>
+                options.Conventions.AuthorizeFolder("/Admin", "admin"));
+
+            builder.Services.AddTransient<Shopping.IdentityServer.Pages.Portal.ClientRepository>();
+            builder.Services.AddTransient<ClientRepository>();
+            builder.Services.AddTransient<IdentityScopeRepository>();
+            builder.Services.AddTransient<ApiScopeRepository>();
+        }
 
         return builder.Build();
     }

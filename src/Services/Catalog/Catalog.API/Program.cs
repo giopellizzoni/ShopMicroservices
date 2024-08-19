@@ -22,7 +22,7 @@ builder.Services.AddMediatR(config =>
 });
 
 var authority = builder.Configuration["IdentityServer:Authority"];
-
+Console.WriteLine($"AUTHORITY {authority}");
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -32,14 +32,15 @@ builder.Services.AddAuthentication(options =>
     {
         opts.Authority = authority;
         opts.RequireHttpsMetadata = false;
-        opts.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = false
-        };
+        opts.TokenValidationParameters.ValidateAudience = false;
     });
 
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("CatalogPolicy", policy => policy.RequireClaim("client_id", "shopping-ms-api"));
+    .AddPolicy("CatalogPolicy", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("client_id", "shopping-ms-api");
+    });
 
 
 builder.Services.AddValidatorsFromAssembly(assembly);

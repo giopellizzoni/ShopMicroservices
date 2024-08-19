@@ -1,14 +1,19 @@
 ﻿using Common.Logging;
+
 using HealthChecks.UI.Client;
+
 using IdentityModel;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
+
 using Polly;
 using Polly.Extensions.Http;
+
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +47,7 @@ builder.Services.AddRefitClient<IOrderingService>()
 builder.Services.AddHealthChecks()
     .AddUrlGroup(new Uri($"{address}/health"), "Yarp Api Gateway", HealthStatus.Degraded);
 
+var authority = builder.Configuration["IdentityServer:Authority"];
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -50,14 +56,14 @@ builder.Services.AddAuthentication(options =>
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
     {
-        options.Authority = "https://localhost:5010";
+        options.Authority = authority;
         options.ClientId = "shopping-ms-api";
         options.ClientSecret = "840C7CDA-1E6F-42E7-A29C-3D12FE965A6F";
         options.ResponseType = "code id_token";
 
         options.Scope.Add("address");
         options.Scope.Add("email");
-        options.Scope.Add("movieAPI");
+        options.Scope.Add("shoppingAPI");
         options.Scope.Add("roles");
         options.ClaimActions.MapUniqueJsonKey("role", "role");
 
@@ -124,4 +130,3 @@ IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
             durationOfBreak: TimeSpan.FromSeconds(30)
         );
 }
-

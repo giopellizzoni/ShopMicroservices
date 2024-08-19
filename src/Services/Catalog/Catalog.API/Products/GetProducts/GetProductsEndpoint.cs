@@ -1,4 +1,6 @@
-﻿namespace Catalog.API.Products.GetProducts;
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace Catalog.API.Products.GetProducts;
 
 public sealed record GetProductsRequest(int? PageNumber = 1, int? PageSize = 10);
 public sealed record GetProductsResponse(IEnumerable<Product> Products);
@@ -7,7 +9,7 @@ public class GetProductsEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/products", async ([AsParameters] GetProductsRequest request,ISender sender) =>
+        app.MapGet("/products", [Authorize(Policy = "CatalogPolicy")] async ([AsParameters] GetProductsRequest request,ISender sender) =>
             {
                 var query = request.Adapt<GetProductsQuery>();
 
@@ -15,7 +17,6 @@ public class GetProductsEndpoint : ICarterModule
                 var response = result.Adapt<GetProductsResponse>();
                 return Results.Ok(response);
             })
-            .RequireAuthorization("CatalogPolicy")
             .WithName("GetProducts")
             .Produces<GetProductsResponse>()
             .ProducesProblem(StatusCodes.Status400BadRequest)
