@@ -3,6 +3,7 @@
 using Consul;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Catalog.API.Extensions;
 
@@ -42,7 +43,12 @@ public static class ProgramExtensionsServices
             {
                 opts.Authority = configuration["IdentityServer:Authority"];
                 opts.RequireHttpsMetadata = false;
-                opts.TokenValidationParameters.ValidateAudience = false;
+                opts.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    ValidIssuer = "https://shopping.identityserver:6070",
+                    ValidateIssuerSigningKey = false
+                };
             });
 
         services.AddAuthorizationBuilder()

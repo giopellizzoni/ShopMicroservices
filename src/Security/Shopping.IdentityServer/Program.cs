@@ -31,7 +31,7 @@ try
         Log.Information("Done seeding database. Exiting.");
         return;
     }
-
+    app.UseHttpsRedirection();
     app.Run();
 }
 catch (Exception ex) when (ex is not HostAbortedException)

@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog(SeriLogger.Configure);
 
 var authority = builder.Configuration["IdentityServer:Authority"];
-
+Console.WriteLine(authority);
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
@@ -35,7 +35,12 @@ builder.Services.AddAuthentication(options =>
     {
         opts.Authority = authority;
         opts.RequireHttpsMetadata = false;
-        opts.TokenValidationParameters.ValidateAudience = false;
+        opts.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+            ValidIssuer = "https://shopping.identityserver:6070",
+            ValidateIssuerSigningKey = false
+        };
     });
 
 builder.Services.AddAuthorizationBuilder()

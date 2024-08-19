@@ -23,6 +23,7 @@ internal static class HostingExtensions
         builder.Services
             .AddIdentityServer(options =>
             {
+                options.IssuerUri = "https://shopping.identityserver:6070";
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;

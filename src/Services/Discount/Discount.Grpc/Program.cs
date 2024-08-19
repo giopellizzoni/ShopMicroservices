@@ -29,7 +29,9 @@ builder.Services.AddAuthentication(options =>
         opts.RequireHttpsMetadata = false;
         opts.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateAudience = false
+            ValidateAudience = false,
+            ValidIssuer = "https://shopping.identityserver:6070",
+            ValidateIssuerSigningKey = false
         };
     });
 
