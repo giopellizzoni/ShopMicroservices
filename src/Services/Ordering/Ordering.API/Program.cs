@@ -30,8 +30,9 @@ builder.Services.AddAuthentication(options =>
         {
             ValidateAudience = false,
             ValidIssuer = "https://shopping.identityserver:6070",
-            ValidateIssuerSigningKey = false
+
         };
+        opts.RequireHttpsMetadata = true;
     });
 
 builder.Services.AddAuthorizationBuilder()

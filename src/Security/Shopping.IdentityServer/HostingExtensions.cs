@@ -7,6 +7,7 @@ using Shopping.IdentityServer.Pages.Admin.IdentityScopes;
 
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 using Serilog;
 
@@ -49,7 +50,8 @@ internal static class HostingExtensions
                 options.ConfigureDbContext = b =>
                     b.UseSqlServer(connectionString,
                         dbOpts => dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName));
-            });
+            })
+            .AddDeveloperSigningCredential();
 
         {
             builder.Services.AddAuthorization(options =>

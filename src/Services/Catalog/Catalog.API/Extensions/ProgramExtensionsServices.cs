@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 
 using Consul;
 
@@ -47,8 +48,16 @@ public static class ProgramExtensionsServices
                 {
                     ValidateAudience = false,
                     ValidIssuer = "https://shopping.identityserver:6070",
-                    ValidateIssuerSigningKey = false
+                    ValidateIssuerSigningKey = false,
+                    SignatureValidator = delegate (string token, TokenValidationParameters parameters)
+                    {
+                        var jwt = new JwtSecurityToken(token);
+                        Console.WriteLine(jwt);
+                        return jwt;
+                    }
+
                 };
+                opts.RequireHttpsMetadata = true;
             });
 
         services.AddAuthorizationBuilder()
