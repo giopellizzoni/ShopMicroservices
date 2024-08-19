@@ -17,6 +17,8 @@ builder.Services.AddMediatR(config =>
     config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 
+var authority = builder.Configuration["IdentityServer:Authority"];
+
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -24,7 +26,7 @@ builder.Services.AddAuthentication(options =>
     })
     .AddJwtBearer("Bearer", opts =>
     {
-        opts.Authority = "https://localhost:5010";
+        opts.Authority = authority;
         opts.RequireHttpsMetadata = false;
         opts.TokenValidationParameters = new TokenValidationParameters
         {
@@ -33,7 +35,7 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("BasketPolicy", policy => policy.RequireClaim("client_id", "shoppingAPI"));
+    .AddPolicy("BasketPolicy", policy => policy.RequireClaim("client_id", "shopping-ms-api"));
 
 builder.Services.AddMarten(opt =>
 {

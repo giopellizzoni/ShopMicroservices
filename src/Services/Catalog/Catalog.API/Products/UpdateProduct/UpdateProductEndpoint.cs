@@ -26,6 +26,7 @@ public class UpdateProductEndpoint: ICarterModule
             return Results.Ok(response);
 
         })
+        .RequireAuthorization("CatalogPolicy")
         .WithName("UpdateProduct")
         .Produces<UpdateProductResponse>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status400BadRequest)

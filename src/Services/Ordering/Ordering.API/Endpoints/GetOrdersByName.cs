@@ -17,6 +17,7 @@ public class GetOrdersByName: ICarterModule
             var response = result.Adapt<GetOrdersByNameResponse>();
             return Results.Ok(response);
         })
+        .RequireAuthorization("OrderingPolicy")
         .WithName("GetOrdersByName")
         .Produces<GetOrdersByNameResponse>()
         .ProducesProblem(StatusCodes.Status400BadRequest)

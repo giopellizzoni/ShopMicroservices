@@ -1,4 +1,4 @@
-using Duende.IdentityServer;
+﻿using Duende.IdentityServer;
 using Shopping.IdentityServer;
 using Shopping.IdentityServer.Pages.Admin.ApiScopes;
 using Shopping.IdentityServer.Pages.Admin.Clients;
@@ -46,32 +46,6 @@ internal static class HostingExtensions
                     b.UseSqlServer(connectionString,
                         dbOpts => dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName));
             });
-
-        builder.Services.AddAuthentication();
-
-        // this adds the necessary config for the simple admin/config pages
-        {
-            builder.Services.AddAuthorization(options =>
-                options.AddPolicy("admin",
-                    policy => policy.RequireClaim("sub", "1"))
-            );
-
-            builder.Services.Configure<RazorPagesOptions>(options =>
-                options.Conventions.AuthorizeFolder("/Admin", "admin"));
-
-            builder.Services.AddTransient<Shopping.IdentityServer.Pages.Portal.ClientRepository>();
-            builder.Services.AddTransient<ClientRepository>();
-            builder.Services.AddTransient<IdentityScopeRepository>();
-            builder.Services.AddTransient<ApiScopeRepository>();
-        }
-
-        // if you want to use server-side sessions: https://blog.duendesoftware.com/posts/20220406_session_management/
-        // then enable it
-        //isBuilder.AddServerSideSessions();
-        //
-        // and put some authorization on the admin/management pages using the same policy created above
-        //builder.Services.Configure<RazorPagesOptions>(options =>
-        //    options.Conventions.AuthorizeFolder("/ServerSideSessions", "admin"));
 
         return builder.Build();
     }

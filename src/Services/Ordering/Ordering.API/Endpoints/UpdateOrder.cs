@@ -23,6 +23,7 @@ public class UpdateOrder : ICarterModule
 
 
             })
+            .RequireAuthorization("OrderingPolicy")
         .WithName("UpdateOrder")
         .Produces<UpdateOrderResponse>()
         .ProducesProblem(StatusCodes.Status400BadRequest)

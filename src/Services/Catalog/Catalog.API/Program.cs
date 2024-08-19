@@ -2,7 +2,9 @@
 
 using HealthChecks.UI.Client;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.IdentityModel.Tokens;
 
 using Serilog;
 
@@ -18,6 +20,28 @@ builder.Services.AddMediatR(config =>
     config.AddOpenBehavior(typeof(ValidationBehavior<,>));
     config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
+
+var authority = builder.Configuration["IdentityServer:Authority"];
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer("Bearer", opts =>
+    {
+        opts.Authority = authority;
+        opts.RequireHttpsMetadata = false;
+        opts.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false
+        };
+    });
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("CatalogPolicy", policy => policy.RequireClaim("client_id", "shopping-ms-api"));
+
+
 builder.Services.AddValidatorsFromAssembly(assembly);
 builder.Services.AddCarter();
 builder.Services.AddMarten(opts =>
@@ -37,7 +61,8 @@ builder.Services.AddHealthChecks()
 
 var app = builder.Build();
 
-// Configure HTTP Request Pipeline
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapCarter();
 app.UseExceptionHandler(_ => {});

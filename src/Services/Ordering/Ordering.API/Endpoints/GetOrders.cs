@@ -19,6 +19,7 @@ public class GetOrders : ICarterModule
                 return Results.Ok(response);
 
             })
+            .RequireAuthorization("OrderingPolicy")
         .WithName("GetOrders")
         .Produces<GetOrdersResponse>()
         .ProducesProblem(StatusCodes.Status400BadRequest)

@@ -27,11 +27,12 @@ public static class Config
             new Client
             {
                 ClientId = "shopping-ms-api",
+                ClientName = "Shopping MVC WebAPP",
                 ClientSecrets = [new Secret("840C7CDA-1E6F-42E7-A29C-3D12FE965A6F".Sha256())],
                 AllowedGrantTypes = GrantTypes.Hybrid,
                 RequirePkce = false,
+                AllowRememberConsent = false,
                 RedirectUris = { "https://localhost:5010/signin-oidc" },
-                FrontChannelLogoutUri = "https://localhost:5010/signout-oidc",
                 PostLogoutRedirectUris = { "https://localhost:5010/signout-callback-oidc" },
                 AllowedScopes = [
                     IdentityServerConstants.StandardScopes.OpenId,
