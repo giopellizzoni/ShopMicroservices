@@ -65,10 +65,6 @@ services:
 
   #Security
 
-networks:
-  kong-net:
-    driver: bridge
-
 volumes:
   postgres_data:
   postgres_catalog:

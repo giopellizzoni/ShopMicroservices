@@ -1,8 +1,5 @@
 ﻿using Common.Logging;
 
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-
 using Ordering.API;
 using Ordering.Application;
 using Ordering.Infrastructure;
@@ -21,9 +18,6 @@ builder.Services
     .AddApiServices(configuration);
 
 var app = builder.Build();
-
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.UseApiServices();
 

@@ -24,6 +24,7 @@ if (builder.Environment.IsDevelopment())
 
 var app = builder.Build();
 
+
 app.MapCarter();
 app.UseExceptionHandler(_ => {});
 app.UseHealthChecks("/health", new HealthCheckOptions

@@ -15,7 +15,6 @@ public class DeleteProductEndpoint : ICarterModule
                 var response = result.Adapt<DeleteProductResponse>();
                 return Results.Ok(response);
             })
-
             .WithName("DeleteProduct")
             .Produces<DeleteProductResponse>()
             .ProducesProblem(StatusCodes.Status400BadRequest)

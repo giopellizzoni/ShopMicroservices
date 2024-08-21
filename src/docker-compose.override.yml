@@ -61,9 +61,6 @@
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Database=Server=catalog-db;Port=5432;Database=CatalogDb;User Id=postgres;Password=postgres;Include Error Detail=true
       - ElasticConfiguration__Uri=http://elasticsearch:9200
-      - IdentityServer__Authority=https://shopping.identityserver:8081
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     depends_on:
       - catalog-db
     ports:
@@ -86,9 +83,6 @@
       - MessageBroker__UserName=guest
       - MessageBroker__Password=guest
       - ElasticConfiguration__Uri=http://elasticsearch:9200
-      - IdentityServer__Authority=https://shopping.identityserver:8081
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     depends_on:
       - basket-db
       - distributedcache
@@ -109,9 +103,6 @@
       - ConnectionStrings__Database=Data Source=discountdb
       - HealthCheck__Address=https://localhost:6062
       - ElasticConfiguration__Uri=http://elasticsearch:9200
-      - IdentityServer__Authority=https://shopping.identityserver:8081
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     ports:
       - "6002:8080"  # HTTP
       - "6062:8081"  # HTTPS
@@ -131,9 +122,6 @@
       - MessageBroker__Password=guest
       - FeatureManagement__OrderFulfillment=true
       - ElasticConfiguration__Uri=http://elasticsearch:9200
-      - IdentityServer__Authority=https://shopping.identityserver:8081
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     depends_on:
       - order-db
       - messagebroker
@@ -153,8 +141,6 @@
       - IdentityServer__Authority=https://shopping.identityserver:8081
       - ApiSettings__GatewayAddress=http://yarpapigateway:8080
       - ElasticConfiguration__Uri=http://elasticsearch:9200
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Tr1c0lor
     ports:
       - "6005:8080"  # HTTP
       - "6065:8081"  # HTTPS
@@ -198,17 +184,19 @@
   kong:
     container_name: kong
     restart: always
+    image: kong:latest
     ports:
       #SECURE
-      - "8443:8443" #PROXY
+      - "6064:8443" #PROXY
       - "8444:8444" #ADMIN
       # INSECURE
-      - "8000:8000"   #PROXY
+      - "6004:8000"   #PROXY
       - "8001:8001"   #ADMIN
+      # GUI
       - "8002:8002"
-#    volumes:
-#      - ./certs:/etc/ssl/certs
-#      - ./kong/declarative:/kong/declarative/
+    volumes:
+      - ./certs:/etc/ssl/certs
+      - ./kong/declarative:/kong/declarative/
     environment:
       KONG_PROXY_ACCESS_LOG: /dev/stdout
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
@@ -217,9 +205,10 @@
       KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
       KONG_DATABASE: "off"
       KONG_ADMIN_GUI_URL: http://localhost:8002
-#      KONG_SSL_CERT: /etc/ssl/certs/localhost.crt
-#      KONG_SSL_CERT_KEY: /etc/ssl/certs/localhost.key
-#      KONG_DECLARATIVE_CONFIG: /kong/declarative/kong.yaml
+      KONG_SSL_CERT: /etc/ssl/certs/localhost.crt
+      KONG_SSL_CERT_KEY: /etc/ssl/certs/localhost.key
+      KONG_DECLARATIVE_CONFIG: /kong/declarative/kong.yml
+
 
   #Security
   keycloak:

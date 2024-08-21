@@ -16,4 +16,11 @@
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="certs\localhost-ca.key" />
+    <Content Include="certs\localhost-ca.pem" />
+    <Content Include="certs\localhost.crt" />
+    <Content Include="certs\localhost.key" />
+    <Content Include="kong\declarative\kong.yml" />
+  </ItemGroup>
 </Project>
