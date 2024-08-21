@@ -15,7 +15,7 @@ public class DeleteProductEndpoint : ICarterModule
                 var response = result.Adapt<DeleteProductResponse>();
                 return Results.Ok(response);
             })
-            .RequireAuthorization("CatalogPolicy")
+
             .WithName("DeleteProduct")
             .Produces<DeleteProductResponse>()
             .ProducesProblem(StatusCodes.Status400BadRequest)

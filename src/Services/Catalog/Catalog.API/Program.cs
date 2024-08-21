@@ -14,9 +14,8 @@ builder.Host.UseSerilog(SeriLogger.Configure);
 builder.Services
     .AddMediator(assembly)
     .AddServices(builder.Configuration)
-    .AddAuth(builder.Configuration)
     .AddMinimalApiLibraries(builder.Configuration, assembly)
-    .AddHealChecks(builder.Configuration);
+    .AddHealthChecks(builder.Configuration);
 
 if (builder.Environment.IsDevelopment())
 {
@@ -24,8 +23,6 @@ if (builder.Environment.IsDevelopment())
 }
 
 var app = builder.Build();
-
-app.UseAuth();
 
 app.MapCarter();
 app.UseExceptionHandler(_ => {});

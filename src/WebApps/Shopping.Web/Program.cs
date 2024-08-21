@@ -2,14 +2,8 @@
 
 using HealthChecks.UI.Client;
 
-using IdentityModel;
-
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.IdentityModel.Tokens;
 
 using Polly;
 using Polly.Extensions.Http;
@@ -52,42 +46,11 @@ builder.Services.AddRefitClient<IOrderingService>()
 builder.Services.AddHealthChecks()
     .AddUrlGroup(new Uri($"{address}/health"), "Yarp Api Gateway", HealthStatus.Degraded);
 
-var authority = builder.Configuration["IdentityServer:Authority"];
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-    })
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
-    {
-        options.Authority = authority;
-        options.ClientId = "shopping-ms-api";
-        options.ClientSecret = "840C7CDA-1E6F-42E7-A29C-3D12FE965A6F";
-        options.ResponseType = "client_credentials";
-
-        options.Scope.Add("address");
-        options.Scope.Add("email");
-        options.Scope.Add("shoppingAPI");
-        options.Scope.Add("roles");
-        options.ClaimActions.MapUniqueJsonKey("role", "role");
-
-        options.SaveTokens = true;
-
-        options.GetClaimsFromUserInfoEndpoint = true;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            NameClaimType = JwtClaimTypes.GivenName,
-            RoleClaimType = JwtClaimTypes.Role
-        };
-    });
 builder.Services.AddTransient<HeaderTokenHandler>();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-app.UseAuthentication();
-app.UseAuthorization();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

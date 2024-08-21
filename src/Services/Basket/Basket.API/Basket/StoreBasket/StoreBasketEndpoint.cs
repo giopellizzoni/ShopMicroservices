@@ -1,7 +1,6 @@
 ﻿namespace Basket.API.Basket.StoreBasket;
 
 public sealed record StoreBasketRequest(ShoppingCart Cart);
-
 public sealed record StoreBasketResponse(string UserName);
 
 public class StoreBasketEndpoint : ICarterModule
@@ -9,8 +8,8 @@ public class StoreBasketEndpoint : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost("/basket/", async (
-            StoreBasketRequest request,
-            ISender sender) =>
+                StoreBasketRequest request,
+                ISender sender) =>
             {
                 var command = request.Adapt<StoreBasketCommand>();
                 var result = await sender.Send(command);
@@ -18,11 +17,10 @@ public class StoreBasketEndpoint : ICarterModule
 
                 return Results.Created($"/basket/{response.UserName}", response);
             })
-            .RequireAuthorization("BasketPolicy")
-        .WithName("StoreBasket")
-        .Produces(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status400BadRequest)
-        .WithSummary("Store Basket")
-        .WithDescription("Store Basket by Shopping Cart");
+            .WithName("StoreBasket")
+            .Produces(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .WithSummary("Store Basket")
+            .WithDescription("Store Basket by Shopping Cart");
     }
 }

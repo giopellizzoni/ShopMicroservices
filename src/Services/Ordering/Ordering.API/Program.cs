@@ -15,30 +15,6 @@ var configuration = builder.Configuration;
 
 builder.Host.UseSerilog(SeriLogger.Configure);
 
-var authority = builder.Configuration["IdentityServer:Authority"];
-
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer("Bearer", opts =>
-    {
-        opts.Authority = authority;
-        opts.RequireHttpsMetadata = false;
-        opts.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = false,
-            ValidIssuer = "https://shopping.identityserver:6070",
-
-        };
-        opts.RequireHttpsMetadata = true;
-    });
-
-builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("OrderingPolicy", policy => policy.RequireClaim("client_id", "shopping-ms-api"));
-
-
 builder.Services
     .AddApplicationServices(configuration)
     .AddInfrastructureServices(configuration)

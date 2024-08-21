@@ -17,27 +17,6 @@ builder.Services.AddMediatR(config =>
     config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 
-var authority = builder.Configuration["IdentityServer:Authority"];
-
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer("Bearer", opts =>
-    {
-        opts.Authority = authority;
-        opts.RequireHttpsMetadata = false;
-        opts.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = false,
-            ValidIssuer = "https://shopping.identityserver:6070",
-        };
-        opts.RequireHttpsMetadata = true;
-    });
-
-builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("BasketPolicy", policy => policy.RequireClaim("client_id", "shopping-ms-api"));
 
 builder.Services.AddMarten(opt =>
 {
@@ -73,9 +52,6 @@ builder.Services.AddHealthChecks()
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 var app = builder.Build();
-
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.MapCarter();
 app.UseExceptionHandler(_ => { });

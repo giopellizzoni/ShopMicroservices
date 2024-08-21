@@ -31,46 +31,7 @@ public static class ProgramExtensionsServices
         return services;
     }
 
-    public static IServiceCollection AddAuth(
-        this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer("Bearer", opts =>
-            {
-                opts.Authority = configuration["IdentityServer:Authority"];
-                opts.RequireHttpsMetadata = false;
-                opts.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateAudience = false,
-                    ValidIssuer = "https://shopping.identityserver:6070",
-                    ValidateIssuerSigningKey = false,
-                    SignatureValidator = delegate (string token, TokenValidationParameters parameters)
-                    {
-                        var jwt = new JwtSecurityToken(token);
-                        Console.WriteLine(jwt);
-                        return jwt;
-                    }
-
-                };
-                opts.RequireHttpsMetadata = true;
-            });
-
-        services.AddAuthorizationBuilder()
-            .AddPolicy("CatalogPolicy", policy =>
-            {
-                policy.RequireAuthenticatedUser();
-                policy.RequireClaim("client_id", "shopping-ms-api");
-            });
-
-        return services;
-    }
-
-    public static IServiceCollection AddHealChecks(
+    public static IServiceCollection AddHealthChecks(
         this IServiceCollection services,
         IConfiguration configuration)
     {
