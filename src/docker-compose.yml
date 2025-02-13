@@ -43,12 +43,6 @@ services:
       context: .
       dockerfile: Services/Ordering/Ordering.API/Dockerfile
 
-  shopping.web:
-    image: ${DOCKER_REGISTRY-}shopping.web
-    build:
-      context: .
-      dockerfile: WebApps/Shopping.Web/Dockerfile
-
   #OBSERVABILITY
   portainer:
     image: portainer/portainer-ce
@@ -59,9 +53,6 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:7.9.2
 
-  #API Gateway
-  kong:
-    image: kong:latest
 
   #Security
 

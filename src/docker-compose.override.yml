@@ -132,22 +132,6 @@
       - ${USER_SECRETS}:/home/app/.microsoft/usersecrets:ro
       - ${ASP_NET}:/home/app/.aspnet/https:ro
 
-  shopping.web:
-    container_name: Shopping.Web
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-      - IdentityServer__Authority=https://shopping.identityserver:8081
-      - ApiSettings__GatewayAddress=http://yarpapigateway:8080
-      - ElasticConfiguration__Uri=http://elasticsearch:9200
-    ports:
-      - "6005:8080"  # HTTP
-      - "6065:8081"  # HTTPS
-    volumes:
-      - ${USER_SECRETS}:/home/app/.microsoft/usersecrets:ro
-      - ${ASP_NET}:/home/app/.aspnet/https:ro
-
   #OBSERVABILITY
   portainer:
     container_name: portainer
@@ -179,44 +163,3 @@
       - elasticsearch
     ports:
       - "5601:5601"
-
-  #API Gateway
-  kong:
-    container_name: kong
-    restart: always
-    image: kong:latest
-    ports:
-      #SECURE
-      - "6064:8443" #PROXY
-      - "8444:8444" #ADMIN
-      # INSECURE
-      - "6004:8000"   #PROXY
-      - "8001:8001"   #ADMIN
-      # GUI
-      - "8002:8002"
-    volumes:
-      - ./certs:/etc/ssl/certs
-      - ./kong/declarative:/kong/declarative/
-    environment:
-      KONG_PROXY_ACCESS_LOG: /dev/stdout
-      KONG_ADMIN_ACCESS_LOG: /dev/stdout
-      KONG_PROXY_ERROR_LOG: /dev/stderr
-      KONG_ADMIN_ERROR_LOG: /dev/stderr
-      KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
-      KONG_DATABASE: "off"
-      KONG_ADMIN_GUI_URL: http://localhost:8002
-      KONG_SSL_CERT: /etc/ssl/certs/localhost.crt
-      KONG_SSL_CERT_KEY: /etc/ssl/certs/localhost.key
-      KONG_DECLARATIVE_CONFIG: /kong/declarative/kong.yml
-
-
-  #Security
-  keycloak:
-    image: quay.io/keycloak/keycloak
-    container_name: keycloak
-    environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
-    ports:
-      - "8082:8080"
-    command: start-dev
